@@ -193,7 +193,6 @@ def filtrar_paises(lista_paises):
 
 
 
-
 # Función de menú
 def mostrar_menu():
     """
