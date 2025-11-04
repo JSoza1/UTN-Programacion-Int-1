@@ -56,17 +56,17 @@ def guardar_datos_csv(lista_paises, nombre_archivo):
     print("========================================")
 
 # Función de validación
-def lista_vacia(catalogo):
+def lista_vacia(lista_paises):
     """
     Verifica si la lista de paises está vacia e imprime un mensaje de error si lo está.
 
     Args:
-        catalogo (list): La lista de paises.
+        lista_paises (list): La lista de paises.
 
     Returns:
         bool: True si la lista está vacia, False si no lo está.
     """
-    if not catalogo:
+    if not lista_paises:
         print("La lista de paises está vacia. Agregue un país primero.")
         print("========================================")
         return True
@@ -191,9 +191,6 @@ def filtrar_paises(lista_paises):
             case _: 
                 print("Opción inválida!")
 
-
-
-
 # Función de menú
 def mostrar_menu():
     """
@@ -247,10 +244,9 @@ def main():
                 # Fragmento de codigo de prueba - proximamente solo ira una funcion principal del menu 3
                 # Inicio condicional - Llamado a función
                 if lista_vacia(lista_paises):
-                    # Si el catalogo esta vacio, se sale de la función
+                    # Si la lista esta vacia, se sale de la función
                     return 
                 
-            
             case '4':
                 filtrar_paises(lista_paises)
             
