@@ -338,7 +338,7 @@ def actualizar_datos_pais(lista_paises, nombre_archivo):
         print("========================================")
         print("Ingrese los nuevos datos (o los mismos si no cambian):")
 
-        # Llamado de función y asignación de valor a variabl
+        # Llamado de función y asignación de valor a variable
         nueva_poblacion = validar_numero(f"Nueva población para '{pais_encontrado['NOMBRE']}': ")
         nueva_superficie = validar_numero(f"Nueva superficie para '{pais_encontrado['NOMBRE']}': ")
         
@@ -353,6 +353,45 @@ def actualizar_datos_pais(lista_paises, nombre_archivo):
         # Mensaje de error
         print(f"Error: El país '{nombre_pais_buscado}' no se encontró en la lista.")
         print("========================================================")
+
+# Función de menú
+def buscar_pais(lista_paises):
+    """
+    Busca países por nombre (coincidencia parcial o exacta).
+    La búsqueda ignora mayúsculas/minúsculas y tildes.
+    Muestra los resultados en una tabla.
+
+    Args:
+        lista_paises (list): La lista de países.
+    """
+    # Mensaje inicial
+    print("\n--- Buscar un país por nombre (coincidencia parcial o exacta) ---\n")
+
+    # Inicio condicional - Llamado a función
+    if lista_vacia(lista_paises):
+    # Si la lista esta vacia, se sale de la función
+        return 
+
+    # Llamado de función y asignación de valor a variable
+    termino_buscado = validar_string("Ingrese el nombre (o parte del nombre) del país a buscar: ")
+
+    # Llamado de función y asignación de valor a variable
+    termino_norm_buscado = normalizar_texto(termino_buscado)
+    
+    # Inicializacion de lista
+    encontrados = []
+    
+    # Inicio bucle
+    for pais in lista_paises:
+        # Normalizacion de los nombres de la lista de paises
+        nombre_norm_lista = normalizar_texto(pais["NOMBRE"])
+    
+        if termino_norm_buscado in nombre_norm_lista:
+            # Si los caracteres ingresados estan dentro de un nombre de la lista de paises, se agrega a la lista "encontrados"
+            encontrados.append(pais)
+            
+    # Llamado de funcion y mensaje final con resultados
+    mostrar_lista_paises(encontrados)
 
 #Filtra los paises cargados por continente
 def filtro_continente(lista):
@@ -547,7 +586,6 @@ def ordenar_paises(lista_paises):
                 print("Opción inválida!")
                 input("\nPresione Enter para volver. ")
 
-
 # Función de menú
 def mostrar_menu():
     """
@@ -597,17 +635,14 @@ def main():
             
             case '3':
                 # Llamado a función
+                buscar_pais(lista_paises)
 
-                # Fragmento de codigo de prueba - proximamente solo ira una funcion principal del menu 3
-                # Inicio condicional - Llamado a función
-                if lista_vacia(lista_paises):
-                    # Si la lista esta vacia, se sale de la función
-                    return 
-                
             case '4':
+                # Llamado a función
                 filtrar_paises(lista_paises)
             
             case '5':
+                # Llamado a función
                 ordenar_paises(lista_paises)
             
             case '6':
