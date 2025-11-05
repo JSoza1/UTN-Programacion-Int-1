@@ -2,6 +2,16 @@
 import csv 
 import os   
 
+# Inicialización de variable
+CONTINENTES = {
+    "america": "América",
+    "europa": "Europa",
+    "asia": "Asia",
+    "africa": "África",
+    "oceania": "Oceanía",
+    "antartida": "Antártida"
+}
+
 # Función de CSV
 def cargar_datos_csv(nombre_archivo):
     """
@@ -68,22 +78,78 @@ def lista_vacia(lista_paises):
     """
     if not lista_paises:
         print("La lista de paises está vacia. Agregue un país primero.")
-        print("========================================")
+        print("========================================================")
         return True
     
     return False
 
+#Validar el ingreso de un string
 def validar_string(mensaje):
-    #Validar que el string no este vacio
+    """
+    Solicita un string al usuario y valida que no esté vacío.
+    y que no consista unicamente en números
+    Se repite hasta que el usuario ingrese un valor.
+
+    Args:
+        mensaje (str): El texto (print) que ve el usuario.
+    
+    Returns:
+        str: Cadena de texto validada (no vacía) y con formato de título.
+    """
+    #Validar que no esté vacío
     while True:
         cadena = input(mensaje).strip()
         if not cadena:
             print("Error: Ingreso vacío ")
+        # Comprueba si la cadena consiste SOLO de dígitos
+        elif cadena.isdigit():
+            print("Error: La entrada no puede ser solo números.")
         else: 
             return cadena.title()
 
+#Normalizar el texto para evitar errores por tildes
+def normalizar_texto(texto):
+    """
+    Convierte un texto a minúsculas y reemplaza las vocales
+    con tilde por sus equivalentes sin tilde.
+
+    Args:
+        texto (str): La cadena de texto a normalizar.
+
+    Returns:
+        str: El texto normalizado.
+    """
+    # Primero, convierte todo a minúsculas
+    texto = texto.lower()
+    
+    # Define los reemplazos
+    reemplazos = (
+        ("á", "a"),
+        ("é", "e"),
+        ("í", "i"),
+        ("ó", "o"),
+        ("ú", "u"),
+    )
+
+    # Aplica cada reemplazo
+    for a, b in reemplazos:
+        texto = texto.replace(a, b)
+        
+    return texto
+
+#Validar que se ingrese un numero entero y positivo
 def validar_numero(mensaje):
-    #Validar que se ingrese un numero entero y positivo 
+    """
+    Solicita un número al usuario y valida que sea un entero positivo.
+    El bucle se repite si la entrada está vacía, no es un dígito,
+    o es un número negativo.
+
+    Args:
+        mensaje (str): El texto (print) que ve el usuario.
+
+    Returns:
+        int: El número entero validado (positivo o cero).
+    """
     while True:
         numero_cadena = input(mensaje).strip()
         if not numero_cadena:
@@ -98,32 +164,195 @@ def validar_numero(mensaje):
         else:
             print("Error: Debe ingresar un número entero y positivo ")
 
+def validar_continente(mensaje):
+    """
+    Solicita un continente al usuario y valida que esté en el diccionario de
+    continentes, la validación ignora tildes y mayúsculas/minúsculas.
+
+    Args:
+        mensaje (str): El texto (print) que ve el usuario.
+
+    Returns:
+        str: El nombre del continente validado y en formato correcto
+    """
+    # Inicio bucle
+    while True:
+        # Solicitud y asignación de valor a variable
+        continente_ingresado = input(mensaje).strip()
+        # Validación ingreso vacio
+        if not continente_ingresado:
+            print("Error: Ingreso vacío.")
+            # Se repite el bucle
+            continue 
+            
+        # Llamado a función y asignación de valor a variable
+        continente_norm = normalizar_texto(continente_ingresado)
+       
+        # Validación de coincidencia de continente valido
+        if continente_norm in CONTINENTES:
+            # Si se encuentra, devuelve el continente
+            return CONTINENTES[continente_norm]
+        else:
+            # Sino se encuentra, mensaje de error
+            print("Error: Continente no válido. Intente nuevamente.")
+
+# Función de validación
+def buscar_pais_lista(lista_paises, nombre_buscado):
+    """
+    Busca un país en la lista usando el nombre normalizado 
+    (ignora mayúsculas/minúsculas y tildes).
+
+    Args:
+        lista_paises (list): Lista de diccionarios (paises).
+        nombre_buscado (str): El nombre del país a buscar.
+
+    Returns:
+        dict: El diccionario del país si se encuentra, None si no.
+    """
+    # Normalización del nombre buscado
+    nombre_norm_buscado = normalizar_texto(nombre_buscado)
+    
+    for pais in lista_paises:
+        # Normalizacion de los nombres de la lista de paises
+        nombre_norm_lista = normalizar_texto(pais["NOMBRE"])
+        
+        if nombre_norm_lista == nombre_norm_buscado:
+            # Si hay coincidencia se devuelve el diccionario
+            return pais 
+    
+    # Sino se encuentra se devuelve none
+    return None
+
+#Muestra una lista de paises
 def mostrar_lista_paises(lista):
-    #Muestra una lista de paises
+    """
+    Imprime en consola una lista de países en un formato de tabla.
+    Si la lista está vacía, lo informa.
+
+    Args:
+        lista (list): Una lista de diccionarios, donde cada diccionario
+                        representa un país.
+
+    Returns:
+        None: Esta función no retorna ningún valor, solo imprime en consola.
+    """
     if not lista:
-        print("No se encontraron países que cumplan con el requisito ")
-        print("="*30)
+        print("\nNo se encontraron países que cumplan con el requisito\n")
+        input("\nPresione Enter para continuar. ")
         return
-    print(f"\n{'NOMBRE':<25} - {'POBLACION':>15} - {'SUPERFICIE':>18} - {'CONTINENTE':<15}")
-    print("="*30)
+    print(f"\n{'NOMBRE':<20} | {'POBLACION':>12} | {'SUPERFICIE':>10} | {'CONTINENTE':<15}")
+    print("="*70)
 
     for pais in lista:
-        print(f"{pais['NOMBRE']:<25} - {pais['POBLACION']:>15} - {pais['SUPERFICIE']:>18} - {pais['CONTINENTE']:<15}")
-    print("="*30)
+        print(f"{pais['NOMBRE']:<20} | {pais['POBLACION']:>12} | {pais['SUPERFICIE']:>10} | {pais['CONTINENTE']:<15}")
+    print("="*70)
+    input("\nPresione Enter para continuar. ")
 
+# Función de menú
+def agregar_pais(lista_paises, nombre_archivo):
+    """
+    Agrega un país con su nombre, población, superficie y continente.
+    Valida que el nombre no esté vacío y que no sea un duplicado
+    (ignorando mayúsculas/minúsculas y tildes).
+    Valida que población y superficie sean números positivos.
+
+    Args:
+        lista_paises (list): La lista actual de países.
+        nombre_archivo (str): Archivo CSV para guardar los cambios.
+    """
+    # Mensaje inicial
+    print("\n--- Agregar país ---\n")
+
+    # Inicio bucle - Validación de nombre y duplicados 
+    while True:
+        # Llamado de función y asignación de valor a variable
+        nombre_pais = validar_string("Ingrese el nombre del país: ")
+        
+        # Llamado de función y asignación de valor a variable
+        pais_existente = buscar_pais_lista(lista_paises, nombre_pais)
+        
+        # Inicio condicional - Validación de existencia de pais
+        if pais_existente:
+            print(f"Error: El país '{pais_existente['NOMBRE']}' ya existe en la lista.")
+            #Se repite el bucle
+        else:
+            #Se termina el bucle
+            break
+            
+    # Llamado de función y asignación de valor a variable
+    poblacion = validar_numero(f"Ingrese la población de '{nombre_pais}': ")
+    
+    # Llamado de función y asignación de valor a variable
+    superficie = validar_numero(f"Ingrese la superficie de '{nombre_pais}': ")
+    
+    # Llamado de función y asignación de valor a variable
+    continente = validar_continente(f"Ingrese el continente de '{nombre_pais}': ")
+
+    # Creación de diccionario con datos previos
+    nuevo_pais_dic = {
+        "NOMBRE": nombre_pais,  
+        "POBLACION": poblacion,
+        "SUPERFICIE": superficie,
+        "CONTINENTE": continente 
+    }
+    
+    # Se agrega el diccionario al array lista_paises
+    lista_paises.append(nuevo_pais_dic)
+    
+    # Llamado de función
+    guardar_datos_csv(lista_paises, nombre_archivo)
+    
+    # Mensaje final
+    print(f"\n¡El país '{nombre_pais}' ha sido agregado exitosamente!")
+
+#Filtra los paises cargados por continente
 def filtro_continente(lista):
-    #Pide un continenta y devuelve una lista filtrada con los paises que pertenecen al continente ingresado
+    """
+    Filtra la lista de países por un continente ingresado por el usuario.
+    La búsqueda ignora mayúsculas, minúsculas Y tildes.
+    Usa 'validar_continente(mensaje)' para asegurar una entrada válida.
+
+    Args:
+        lista (list): La lista completa de países.
+
+    Returns:
+        list: Una nueva lista (encontrados) que contiene solo los países que coinciden con el continente ingresado.
+    """
+    #Pide un continente y devuelve una lista filtrada
     print("\n--- Filtrar por continente ---\n")
-    continente = validar_string("Ingrese el continente: ")
+    
+    # Llamado a función y asignación de valor a variable
+    continente_ingresado = validar_continente("Ingrese el continente: ")
+
+    # Normalizamos la entrada del usuario (ej: "América" -> "america")
+    continente_normalizado = normalizar_texto(continente_ingresado)
 
     encontrados = []
     for pais in lista:
-        if pais['CONTINENTE'].lower() == continente.lower():
+        # Normalizamos el dato del CSV (ej: "América" -> "america")
+        pais_continente_normalizado = normalizar_texto(pais['CONTINENTE'])
+
+        # Comparamos los dos textos normalizados
+        if pais_continente_normalizado == continente_normalizado:
             encontrados.append(pais)
+            
     return encontrados
 
+#Filtra por rango de poblacion 
 def filtro_poblacion(lista):
-    #Pide un rango de poblacion (se ingresa el minimo y el maximo) y devuelve la lista filtrada con los paises que cumplen
+    """
+    Filtra la lista de países por un rango de población (mínimo y máximo)
+    ingresado por el usuario.
+
+    Args:
+        lista (list): La lista completa de países.
+
+    Returns:
+        list: Una nueva lista (encontrados) que contiene solo los países
+                cuya población está dentro del rango especificado.
+                Devuelve una lista vacía si el mínimo es mayor al máximo.
+    """
+    #Pide un rango de poblacion
     print("\n--- Filtrar por población ---\n")
     minimo = validar_numero("Ingrese la población mínima: ")
     maximo = validar_numero("Ingrese la población máxima: ")
@@ -137,8 +366,21 @@ def filtro_poblacion(lista):
             encontrados.append(pais)
     return encontrados
 
+#Filtra por rango de superficie
 def filtro_superficie(lista):
-    #Pide un rango de superficie (se ingresa el minimo y el maximo) y devuelve la lista filtrada con los paises que cumplen
+    """
+    Filtra la lista de países por un rango de superficie (mínimo y máximo)
+    ingresado por el usuario.
+
+    Args:
+        lista (list): La lista completa de países a filtrar.
+
+    Returns:
+        list: Una nueva lista (encontrados) que contiene solo los países
+                cuya superficie está dentro del rango especificado (inclusivo).
+                Devuelve una lista vacía si el mínimo es mayor al máximo.
+    """
+    #Pide un rango de superficie
     print("\n--- Filtrar por superficie ---\n")
     minimo = validar_numero("Ingrese la superficie mínima: ")
     maximo = validar_numero("Ingrese la superficie máxima: ")
@@ -152,8 +394,19 @@ def filtro_superficie(lista):
             encontrados.append(pais)
     return encontrados
 
+#Opciones de filtros
 def filtrar_paises(lista_paises):
-    
+    """
+    Muestra un sub-menú para las opciones de filtrado.
+    Permite al usuario elegir filtrar por continente, población o superficie.
+    Llama a las funciones de filtro correspondientes y muestra los resultados.
+
+    Args:
+        lista_paises (list): La lista principal de países.
+
+    Returns:
+        None: Esta función no retorna ningún valor, solo gestiona el menú.
+    """
     if lista_vacia(lista_paises):
         return
     
@@ -190,6 +443,61 @@ def filtrar_paises(lista_paises):
         
             case _: 
                 print("Opción inválida!")
+                input("\nPresione Enter para volver. ")
+
+#Ordena paises por nombre,poblacion o superficie
+def ordenar_paises(lista_paises):
+    """
+    Muestra un sub-menú para ordenar la lista de países por
+    diferentes criterios.
+    Muestra el resultado ordenado sin modificar la lista original.
+
+    Args:
+        lista_paises (list): La lista de países.
+
+    Returns:
+        None: Gestiona el menú y llama a mostrar_lista_paises().
+    """
+    if lista_vacia(lista_paises):
+        return
+    
+    #Sub-menu de opciones para ordenar
+    while True:
+        print("\n--- Ordenar países ---\n")
+        print("1. Ordenar por nombre (A-Z) ")
+        print("2. Ordenar por población (ascendente) ")
+        print("3. Ordenar por superficie (ascendente) ")
+        print("4. Ordenar por superficie (descendente) ")
+        print("5. Volver atrás ")
+        print("\n")
+
+        opcion = input("Ingrese una de las opciones --> ").strip()
+
+        match opcion:
+            case '1':
+                lista_ordenada = sorted(lista_paises, key=lambda pais: pais['NOMBRE'], reverse= False)
+                mostrar_lista_paises(lista_ordenada)
+
+            case '2':
+                lista_ordenada = sorted(lista_paises, key=lambda pais: pais['POBLACION'], reverse = False)
+                mostrar_lista_paises(lista_ordenada)
+
+            case '3':
+                lista_ordenada = sorted(lista_paises, key=lambda pais: pais['SUPERFICIE'], reverse=False)
+                mostrar_lista_paises(lista_ordenada)
+
+            case '4':
+                lista_ordenada = sorted(lista_paises, key=lambda pais: pais['SUPERFICIE'], reverse=True)
+                mostrar_lista_paises(lista_ordenada)
+
+            case '5':
+                print("Volviendo al menú...")
+                break
+
+            case _: 
+                print("Opción inválida!")
+                input("\nPresione Enter para volver. ")
+
 
 # Función de menú
 def mostrar_menu():
@@ -199,7 +507,7 @@ def mostrar_menu():
     # Mensajes de opciones del menú
     print("\n")
     print("GESTION DE DATOS DE PAISES")
-    print("=" * 40)
+    print("=" * 60)
     print("1. Agregar un país")
     print("2. Actualizar los datos de poblacion y superficie de un país")
     print("3. Buscar un país por nombre (coincidencia parcial o exacta)")
@@ -207,7 +515,7 @@ def mostrar_menu():
     print("5. Ordenar paises")
     print("6. Mostrar estadisticas")
     print("7. Salir")
-    print("=" * 40)
+    print("=" * 60)
 
 # Función principal
 def main():
@@ -232,7 +540,7 @@ def main():
         match opcion:
             case '1':
                 # Llamado a función
-                pass
+                agregar_pais(lista_paises, nombre_archivo)
             
             case '2':
                 # Llamado a función
@@ -251,8 +559,7 @@ def main():
                 filtrar_paises(lista_paises)
             
             case '5':
-                # Llamado a función
-                pass
+                ordenar_paises(lista_paises)
             
             case '6':
                 # Llamado a función
