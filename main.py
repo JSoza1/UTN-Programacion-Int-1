@@ -2,6 +2,16 @@
 import csv 
 import os   
 
+# Inicialización de variable
+CONTINENTES = {
+    "america": "América",
+    "europa": "Europa",
+    "asia": "Asia",
+    "africa": "África",
+    "oceania": "Oceanía",
+    "antartida": "Antártida"
+}
+
 # Función de CSV
 def cargar_datos_csv(nombre_archivo):
     """
@@ -77,6 +87,7 @@ def lista_vacia(lista_paises):
 def validar_string(mensaje):
     """
     Solicita un string al usuario y valida que no esté vacío.
+    y que no consista unicamente en números
     Se repite hasta que el usuario ingrese un valor.
 
     Args:
@@ -90,6 +101,9 @@ def validar_string(mensaje):
         cadena = input(mensaje).strip()
         if not cadena:
             print("Error: Ingreso vacío ")
+        # Comprueba si la cadena consiste SOLO de dígitos
+        elif cadena.isdigit():
+            print("Error: La entrada no puede ser solo números.")
         else: 
             return cadena.title()
 
@@ -150,6 +164,65 @@ def validar_numero(mensaje):
         else:
             print("Error: Debe ingresar un número entero y positivo ")
 
+def validar_continente(mensaje):
+    """
+    Solicita un continente al usuario y valida que esté en el diccionario de
+    continentes, la validación ignora tildes y mayúsculas/minúsculas.
+
+    Args:
+        mensaje (str): El texto (print) que ve el usuario.
+
+    Returns:
+        str: El nombre del continente validado y en formato correcto
+    """
+    # Inicio bucle
+    while True:
+        # Solicitud y asignación de valor a variable
+        continente_ingresado = input(mensaje).strip()
+        # Validación ingreso vacio
+        if not continente_ingresado:
+            print("Error: Ingreso vacío.")
+            # Se repite el bucle
+            continue 
+            
+        # Llamado a función y asignación de valor a variable
+        continente_norm = normalizar_texto(continente_ingresado)
+       
+        # Validación de coincidencia de continente valido
+        if continente_norm in CONTINENTES:
+            # Si se encuentra, devuelve el continente
+            return CONTINENTES[continente_norm]
+        else:
+            # Sino se encuentra, mensaje de error
+            print("Error: Continente no válido. Intente nuevamente.")
+
+# Función de validación
+def buscar_pais_lista(lista_paises, nombre_buscado):
+    """
+    Busca un país en la lista usando el nombre normalizado 
+    (ignora mayúsculas/minúsculas y tildes).
+
+    Args:
+        lista_paises (list): Lista de diccionarios (paises).
+        nombre_buscado (str): El nombre del país a buscar.
+
+    Returns:
+        dict: El diccionario del país si se encuentra, None si no.
+    """
+    # Normalización del nombre buscado
+    nombre_norm_buscado = normalizar_texto(nombre_buscado)
+    
+    for pais in lista_paises:
+        # Normalizacion de los nombres de la lista de paises
+        nombre_norm_lista = normalizar_texto(pais["NOMBRE"])
+        
+        if nombre_norm_lista == nombre_norm_buscado:
+            # Si hay coincidencia se devuelve el diccionario
+            return pais 
+    
+    # Sino se encuentra se devuelve none
+    return None
+
 #Muestra una lista de paises
 def mostrar_lista_paises(lista):
     """
@@ -175,22 +248,81 @@ def mostrar_lista_paises(lista):
     print("="*70)
     input("\nPresione Enter para continuar. ")
 
+# Función de menú
+def agregar_pais(lista_paises, nombre_archivo):
+    """
+    Agrega un país con su nombre, población, superficie y continente.
+    Valida que el nombre no esté vacío y que no sea un duplicado
+    (ignorando mayúsculas/minúsculas y tildes).
+    Valida que población y superficie sean números positivos.
+
+    Args:
+        lista_paises (list): La lista actual de países.
+        nombre_archivo (str): Archivo CSV para guardar los cambios.
+    """
+    # Mensaje inicial
+    print("\n--- Agregar país ---\n")
+
+    # Inicio bucle - Validación de nombre y duplicados 
+    while True:
+        # Llamado de función y asignación de valor a variable
+        nombre_pais = validar_string("Ingrese el nombre del país: ")
+        
+        # Llamado de función y asignación de valor a variable
+        pais_existente = buscar_pais_lista(lista_paises, nombre_pais)
+        
+        # Inicio condicional - Validación de existencia de pais
+        if pais_existente:
+            print(f"Error: El país '{pais_existente['NOMBRE']}' ya existe en la lista.")
+            #Se repite el bucle
+        else:
+            #Se termina el bucle
+            break
+            
+    # Llamado de función y asignación de valor a variable
+    poblacion = validar_numero(f"Ingrese la población de '{nombre_pais}': ")
+    
+    # Llamado de función y asignación de valor a variable
+    superficie = validar_numero(f"Ingrese la superficie de '{nombre_pais}': ")
+    
+    # Llamado de función y asignación de valor a variable
+    continente = validar_continente(f"Ingrese el continente de '{nombre_pais}': ")
+
+    # Creación de diccionario con datos previos
+    nuevo_pais_dic = {
+        "NOMBRE": nombre_pais,  
+        "POBLACION": poblacion,
+        "SUPERFICIE": superficie,
+        "CONTINENTE": continente 
+    }
+    
+    # Se agrega el diccionario al array lista_paises
+    lista_paises.append(nuevo_pais_dic)
+    
+    # Llamado de función
+    guardar_datos_csv(lista_paises, nombre_archivo)
+    
+    # Mensaje final
+    print(f"\n¡El país '{nombre_pais}' ha sido agregado exitosamente!")
+
 #Filtra los paises cargados por continente
 def filtro_continente(lista):
     """
     Filtra la lista de países por un continente ingresado por el usuario.
     La búsqueda ignora mayúsculas, minúsculas Y tildes.
+    Usa 'validar_continente(mensaje)' para asegurar una entrada válida.
 
     Args:
         lista (list): La lista completa de países.
 
     Returns:
-        list: Una nueva lista (encontrados) que contiene solo los países
-                que coinciden con el continente ingresado.
+        list: Una nueva lista (encontrados) que contiene solo los países que coinciden con el continente ingresado.
     """
     #Pide un continente y devuelve una lista filtrada
     print("\n--- Filtrar por continente ---\n")
-    continente_ingresado = validar_string("Ingrese el continente: ")
+    
+    # Llamado a función y asignación de valor a variable
+    continente_ingresado = validar_continente("Ingrese el continente: ")
 
     # Normalizamos la entrada del usuario (ej: "América" -> "america")
     continente_normalizado = normalizar_texto(continente_ingresado)
@@ -408,7 +540,7 @@ def main():
         match opcion:
             case '1':
                 # Llamado a función
-                pass
+                agregar_pais(lista_paises, nombre_archivo)
             
             case '2':
                 # Llamado a función
