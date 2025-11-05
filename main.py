@@ -305,6 +305,55 @@ def agregar_pais(lista_paises, nombre_archivo):
     # Mensaje final
     print(f"\n¡El país '{nombre_pais}' ha sido agregado exitosamente!")
 
+# Función de menú
+def actualizar_datos_pais(lista_paises, nombre_archivo):
+    """
+    Actualiza la población y la superficie de un país existente.
+    Busca al país por nombre (ignora mayúsculas/minúsculas y tildes).
+
+    Args:
+        lista_paises (list): La lista actual de países.
+        nombre_archivo (str): Archivo CSV para guardar los cambios.
+    """
+    # Mensaje inicial
+    print("\n--- Actualizar los datos de poblacion y superficie de un país ---\n")
+
+    # Inicio condicional - Llamado a función
+    if lista_vacia(lista_paises):
+    # Si la lista esta vacia, se sale de la función
+        return 
+
+    # Llamado de función y asignación de valor a variable
+    nombre_pais_buscado = validar_string("Ingrese el nombre del país que desea actualizar: ")
+    
+    # Llamado de función y asignación de valor a variable
+    pais_encontrado = buscar_pais_lista(lista_paises, nombre_pais_buscado)
+
+    # Inicio condicional
+    if pais_encontrado:
+        # Datos actuales del país encontrado
+        print(f"\nDatos actuales de '{pais_encontrado['NOMBRE']}':")
+        print(f"  - Población: {pais_encontrado['POBLACION']}")
+        print(f"  - Superficie: {pais_encontrado['SUPERFICIE']}")
+        print("========================================")
+        print("Ingrese los nuevos datos (o los mismos si no cambian):")
+
+        # Llamado de función y asignación de valor a variabl
+        nueva_poblacion = validar_numero(f"Nueva población para '{pais_encontrado['NOMBRE']}': ")
+        nueva_superficie = validar_numero(f"Nueva superficie para '{pais_encontrado['NOMBRE']}': ")
+        
+        # Actualiza los datos del diccionario de "pais_encontrado" que esta dentro de "lista_paises"
+        pais_encontrado['POBLACION'] = nueva_poblacion
+        pais_encontrado['SUPERFICIE'] = nueva_superficie
+        
+        # Llamado de función
+        guardar_datos_csv(lista_paises, nombre_archivo)
+
+    else:
+        # Mensaje de error
+        print(f"Error: El país '{nombre_pais_buscado}' no se encontró en la lista.")
+        print("========================================================")
+
 #Filtra los paises cargados por continente
 def filtro_continente(lista):
     """
@@ -544,7 +593,7 @@ def main():
             
             case '2':
                 # Llamado a función
-                pass
+                actualizar_datos_pais(lista_paises, nombre_archivo)
             
             case '3':
                 # Llamado a función
