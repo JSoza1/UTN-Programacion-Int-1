@@ -2,16 +2,6 @@
 import csv 
 import os   
 
-# Inicialización de variable
-CONTINENTES = {
-    "america": "América",
-    "europa": "Europa",
-    "asia": "Asia",
-    "africa": "África",
-    "oceania": "Oceanía",
-    "antartida": "Antártida"
-}
-
 # Función de CSV
 def cargar_datos_csv(nombre_archivo):
     """
@@ -169,13 +159,14 @@ def validar_numero(mensaje):
         else:
             print("Error: Debe ingresar un número entero y positivo ")
 
-def validar_continente(mensaje):
+def validar_continente(mensaje, continentes_validos):
     """
     Solicita un continente al usuario y valida que esté en el diccionario de
     continentes, la validación ignora tildes y mayúsculas/minúsculas.
 
     Args:
         mensaje (str): El texto (print) que ve el usuario.
+        continentes_validos (dict): El diccionario de continentes a validar.
 
     Returns:
         str: El nombre del continente validado y en formato correcto
@@ -194,9 +185,9 @@ def validar_continente(mensaje):
         continente_norm = normalizar_texto(continente_ingresado)
 
         # Validación de coincidencia de continente valido
-        if continente_norm in CONTINENTES:
+        if continente_norm in continentes_validos:
             # Si se encuentra, devuelve el continente
-            return CONTINENTES[continente_norm]
+            return continentes_validos[continente_norm]
         else:
             # Sino se encuentra, mensaje de error
             print("Error: Continente no válido. Intente nuevamente.")
@@ -258,7 +249,7 @@ def mostrar_lista_paises(lista):
     input("\nPresione Enter para continuar. ")
 
 # Función de menú
-def agregar_pais(lista_paises, nombre_archivo):
+def agregar_pais(lista_paises, nombre_archivo, continentes_validos):
     """
     Agrega un país con su nombre, población, superficie y continente.
     Valida que el nombre no esté vacío y que no sea un duplicado
@@ -268,6 +259,7 @@ def agregar_pais(lista_paises, nombre_archivo):
     Args:
         lista_paises (list): La lista actual de países.
         nombre_archivo (str): Archivo CSV para guardar los cambios.
+        continentes_validos (dict): El diccionario de continentes.
     """
     # Mensaje inicial
     print("\n--- Agregar país ---\n")
@@ -295,7 +287,7 @@ def agregar_pais(lista_paises, nombre_archivo):
     superficie = validar_numero(f"Ingrese la superficie de '{nombre_pais}': ")
     
     # Llamado de función y asignación de valor a variable
-    continente = validar_continente(f"Ingrese el continente de '{nombre_pais}': ")
+    continente = validar_continente(f"Ingrese el continente de '{nombre_pais}': ", continentes_validos)
 
     # Creación de diccionario con datos previos
     nuevo_pais_dic = {
@@ -403,7 +395,7 @@ def buscar_pais(lista_paises):
     mostrar_lista_paises(encontrados)
 
 #Filtra los paises cargados por continente
-def filtro_continente(lista):
+def filtro_continente(lista, continentes_validos):
     """
     Filtra la lista de países por un continente ingresado por el usuario.
     La búsqueda ignora mayúsculas, minúsculas Y tildes.
@@ -411,6 +403,7 @@ def filtro_continente(lista):
 
     Args:
         lista (list): La lista completa de países.
+        continentes_validos (dict): El diccionario de continentes.
 
     Returns:
         list: Una nueva lista (encontrados) que contiene solo los países que coinciden con el continente ingresado.
@@ -419,7 +412,7 @@ def filtro_continente(lista):
     print("\n--- Filtrar por continente ---\n")
     
     # Llamado a función y asignación de valor a variable
-    continente_ingresado = validar_continente("Ingrese el continente: ")
+    continente_ingresado = validar_continente("Ingrese el continente: ", continentes_validos)
 
     # Normalizamos la entrada del usuario (ej: "América" -> "america")
     continente_normalizado = normalizar_texto(continente_ingresado)
@@ -498,7 +491,7 @@ def filtro_superficie(lista):
     return encontrados
 
 #Opciones de filtros
-def filtrar_paises(lista_paises):
+def filtrar_paises(lista_paises, continentes_validos):
     """
     Muestra un sub-menú para las opciones de filtrado.
     Permite al usuario elegir filtrar por continente, población o superficie.
@@ -506,6 +499,7 @@ def filtrar_paises(lista_paises):
 
     Args:
         lista_paises (list): La lista principal de países.
+        continentes_validos (dict): El diccionario de continentes.
 
     Returns:
         None: Esta función no retorna ningún valor, solo gestiona el menú.
@@ -529,7 +523,7 @@ def filtrar_paises(lista_paises):
         match opcion:
 
             case '1':
-                lista_filtrada = filtro_continente(lista_paises)
+                lista_filtrada = filtro_continente(lista_paises, continentes_validos)
                 mostrar_lista_paises(lista_filtrada)
 
             case '2':
@@ -785,10 +779,20 @@ def mostrar_menu():
 def main():
     """
     Función principal del programa.
-    Inicializa el los datos del csv y ejecuta el bucle del menú.
+    Inicializa los datos del csv, la variable CONTINENTES y ejecuta el bucle del menú.
     """
     # Asignacion de valor a variable
     nombre_archivo = 'datos_paises.csv'
+
+    # Inicialización de variable
+    CONTINENTES = {
+        "america": "América",
+        "europa": "Europa",
+        "asia": "Asia",
+        "africa": "África",
+        "oceania": "Oceanía",
+        "antartida": "Antártida"
+    }
     
     # Llamado de función y almacenamiento de lista de diccionarios en lista_paises
     lista_paises = cargar_datos_csv(nombre_archivo)
@@ -804,7 +808,7 @@ def main():
         match opcion:
             case '1':
                 # Llamado a función
-                agregar_pais(lista_paises, nombre_archivo)
+                agregar_pais(lista_paises, nombre_archivo, CONTINENTES)
             
             case '2':
                 # Llamado a función
@@ -816,7 +820,7 @@ def main():
 
             case '4':
                 # Llamado a función
-                filtrar_paises(lista_paises)
+                filtrar_paises(lista_paises, CONTINENTES)
             
             case '5':
                 # Llamado a función
