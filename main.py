@@ -542,6 +542,56 @@ def filtrar_paises(lista_paises, continentes_validos):
                 print("Opción inválida!")
                 input("\nPresione Enter para volver. ")
 
+#Ordena una lista de paises
+def ordenar_lista(lista_paises,clave,reversa=False):
+    """
+    Ordena una copia de la lista de países
+
+    Args:
+        lista_paises (list): La lista de paises a ordenar
+        clave (str): La clave del diccionario (ej: 'NOMBRE', 'POBLACION')
+        reversa (bool): False para ascendente (A-Z), True para descendente (Z-A)
+
+    Returns:
+        list: Una nueva lista ordenada
+    """
+    
+    #Hacemos una copia de la lista de paises
+    lista_copia = lista_paises.copy()
+    n = len(lista_copia) 
+
+    #Bucle exterior: recorre la lista de 0 hasta el final
+    for i in range(n):
+        
+        #Asumimos que el elemento en i es el extremo (mínimo o máximo)
+        #Guardamos su posicion
+        idx_extremo = i
+        
+        #Bucle interior: busca en el "resto" de la lista 
+        #para ver si encontramos un elemento "mejor"
+        for j in range(i + 1, n):
+            
+            #Logica de comparacion
+            valor_actual = lista_copia[j][clave]
+            valor_extremo = lista_copia[idx_extremo][clave]
+            
+            if reversa:
+                #Orden descendente (buscamos el maximo)
+                if valor_actual > valor_extremo:
+                    idx_extremo = j
+            else:
+                #Orden ascendente (buscamos el minimo)
+                if valor_actual < valor_extremo:
+                    idx_extremo = j 
+
+        #Al final del bucle interior idx_extremo tiene la posición
+        #del país correcto. Lo intercambiamos con la posición i
+        lista_copia[i], lista_copia[idx_extremo] = lista_copia[idx_extremo], lista_copia[i]
+        
+    #Devolver la lista copiada y ordenada
+    return lista_copia
+
+
 #Ordena paises por nombre,poblacion o superficie
 def ordenar_paises(lista_paises):
     """
@@ -572,24 +622,24 @@ def ordenar_paises(lista_paises):
         opcion = input("Ingrese una de las opciones --> ").strip()
 
         match opcion:
-            #En las opciones llamamos a la funcion sorted que nos crea una nueva lista ordenada
-            #Le pasamos la lista que deseamos ordenar, la key que deseamos utilizar (utilizando lambda)
+            #En las opciones llamamos a la funcion ordenar_lista que nos crea una nueva lista ordenada
+            #Le pasamos la lista que deseamos ordenar, la key que deseamos utilizar
             # y reverse False o True para ordenar de manera ascendente o descendente
 
             case '1':
-                lista_ordenada = sorted(lista_paises, key=lambda pais: pais['NOMBRE'], reverse= False)
+                lista_ordenada = ordenar_lista(lista_paises,clave='NOMBRE', reversa= False)
                 mostrar_lista_paises(lista_ordenada)
 
             case '2':
-                lista_ordenada = sorted(lista_paises, key=lambda pais: pais['POBLACION'], reverse = False)
+                lista_ordenada = ordenar_lista(lista_paises, clave='POBLACION', reversa = False)
                 mostrar_lista_paises(lista_ordenada)
 
             case '3':
-                lista_ordenada = sorted(lista_paises, key=lambda pais: pais['SUPERFICIE'], reverse=False)
+                lista_ordenada = ordenar_lista(lista_paises, clave='SUPERFICIE', reversa=False)
                 mostrar_lista_paises(lista_ordenada)
 
             case '4':
-                lista_ordenada = sorted(lista_paises, key=lambda pais: pais['SUPERFICIE'], reverse=True)
+                lista_ordenada = ordenar_lista(lista_paises, clave='SUPERFICIE', reversa=True)
                 mostrar_lista_paises(lista_ordenada)
 
             case '5':
