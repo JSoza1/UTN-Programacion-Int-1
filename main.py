@@ -63,7 +63,6 @@ def guardar_datos_csv(lista_paises, nombre_archivo):
     # Mensaje final
     print("========================================")
     print(f"Datos actualizados en {nombre_archivo}.")
-    print("========================================")
 
 # Función de validación
 def lista_vacia(lista_paises):
@@ -86,7 +85,7 @@ def lista_vacia(lista_paises):
 #Validar el ingreso de un string
 def validar_string(mensaje):
     """
-    Solicita un string al usuario y valida que no esté vacío.
+    Solicita un string al usuario y valida que no esté vacío
     y que no consista unicamente en números
     Se repite hasta que el usuario ingrese un valor.
 
@@ -151,16 +150,22 @@ def validar_numero(mensaje):
         int: El número entero validado (positivo o cero).
     """
     while True:
+        #Pedimos al usuario que ingrese un numero
         numero_cadena = input(mensaje).strip()
+
+        #Si el ingreso esta vacío, mostramos el error
         if not numero_cadena:
             print("Error: Ingreso vacío ")
             continue
+
+        #Vemos si el ingreso del usuario es un numero
         if numero_cadena.isdigit():
             numero_int = int(numero_cadena)
             if numero_int < 0:
                 print("Error: El número debe ser positivo ")
             else: 
                 return numero_int
+        #Si no es un numero, mostramos el error
         else:
             print("Error: Debe ingresar un número entero y positivo ")
 
@@ -187,7 +192,7 @@ def validar_continente(mensaje):
             
         # Llamado a función y asignación de valor a variable
         continente_norm = normalizar_texto(continente_ingresado)
-       
+
         # Validación de coincidencia de continente valido
         if continente_norm in CONTINENTES:
             # Si se encuentra, devuelve el continente
@@ -236,13 +241,17 @@ def mostrar_lista_paises(lista):
     Returns:
         None: Esta función no retorna ningún valor, solo imprime en consola.
     """
+    #Valida si la lista de resultados está vacía
     if not lista:
         print("\nNo se encontraron países que cumplan con el requisito\n")
         input("\nPresione Enter para continuar. ")
         return
+    
+    #Mostrar por pantalla el encabezado (nombre,poblacion,superficie,continente)
     print(f"\n{'NOMBRE':<20} | {'POBLACION':>12} | {'SUPERFICIE':>10} | {'CONTINENTE':<15}")
     print("="*70)
 
+    #Mostrar por pantalla cada pais 
     for pais in lista:
         print(f"{pais['NOMBRE']:<20} | {pais['POBLACION']:>12} | {pais['SUPERFICIE']:>10} | {pais['CONTINENTE']:<15}")
     print("="*70)
@@ -303,7 +312,7 @@ def agregar_pais(lista_paises, nombre_archivo):
     guardar_datos_csv(lista_paises, nombre_archivo)
     
     # Mensaje final
-    print(f"\n¡El país '{nombre_pais}' ha sido agregado exitosamente!")
+    print(f"¡El país '{nombre_pais}' ha sido agregado exitosamente!")
 
 # Función de menú
 def actualizar_datos_pais(lista_paises, nombre_archivo):
@@ -332,7 +341,8 @@ def actualizar_datos_pais(lista_paises, nombre_archivo):
     # Inicio condicional
     if pais_encontrado:
         # Datos actuales del país encontrado
-        print(f"\nDatos actuales de '{pais_encontrado['NOMBRE']}':")
+        print("========================================")
+        print(f"Datos actuales de '{pais_encontrado['NOMBRE']}':")
         print(f"  - Población: {pais_encontrado['POBLACION']}")
         print(f"  - Superficie: {pais_encontrado['SUPERFICIE']}")
         print("========================================")
@@ -352,7 +362,6 @@ def actualizar_datos_pais(lista_paises, nombre_archivo):
     else:
         # Mensaje de error
         print(f"Error: El país '{nombre_pais_buscado}' no se encontró en la lista.")
-        print("========================================================")
 
 # Función de menú
 def buscar_pais(lista_paises):
@@ -444,10 +453,13 @@ def filtro_poblacion(lista):
     print("\n--- Filtrar por población ---\n")
     minimo = validar_numero("Ingrese la población mínima: ")
     maximo = validar_numero("Ingrese la población máxima: ")
+
+    #Si el numero minimo es mayor al maximo. mostramos el error
     if minimo > maximo:
         print("Error: La población mínima no puede ser mayor a la máxima! ")
         return []
     
+    #Creamos una lista vacia para ir agregando los paises que cumplen la condicion 
     encontrados = []
     for pais in lista:
         if minimo <= pais['POBLACION'] <= maximo:
@@ -472,10 +484,13 @@ def filtro_superficie(lista):
     print("\n--- Filtrar por superficie ---\n")
     minimo = validar_numero("Ingrese la superficie mínima: ")
     maximo = validar_numero("Ingrese la superficie máxima: ")
+
+    #Si el numero minimo es mayor al maximo, mostramos el error
     if minimo > maximo:
         print("Error: La superficie mínima no puede ser mayor a la máxima! ")
         return []
-
+    
+    #Creamos una lista vacia para ir agregando los paises que cumplen la condicion 
     encontrados = []
     for pais in lista:
         if minimo <= pais['SUPERFICIE'] <= maximo:
@@ -546,6 +561,7 @@ def ordenar_paises(lista_paises):
     Returns:
         None: Gestiona el menú y llama a mostrar_lista_paises().
     """
+    #Chequeamos que la lista no esté vacía 
     if lista_vacia(lista_paises):
         return
     
@@ -562,6 +578,10 @@ def ordenar_paises(lista_paises):
         opcion = input("Ingrese una de las opciones --> ").strip()
 
         match opcion:
+            #En las opciones llamamos a la funcion sorted que nos crea una nueva lista ordenada
+            #Le pasamos la lista que deseamos ordenar, la key que deseamos utilizar (utilizando lambda)
+            # y reverse False o True para ordenar de manera ascendente o descendente
+
             case '1':
                 lista_ordenada = sorted(lista_paises, key=lambda pais: pais['NOMBRE'], reverse= False)
                 mostrar_lista_paises(lista_ordenada)
@@ -586,21 +606,178 @@ def ordenar_paises(lista_paises):
                 print("Opción inválida!")
                 input("\nPresione Enter para volver. ")
 
+#Calcula el pais con mayor y menor poblacion
+def calcular_poblacion(lista_paises):
+    """
+    Encuentra el país con la mayor y la menor población de la lista.
+    Imprime los resultados directamente en la consola.
+
+    Args:
+        lista_paises (list): La lista de países.
+    """
+    #Asumimos que el primer pais es el menor y mayor para tener un punto de partida
+    menor = lista_paises[0]
+    mayor = lista_paises[0]
+
+    #Recorremos la lista para comparar
+    for pais in lista_paises:
+        actual = pais['POBLACION']
+        #Comparamos y actualizamos el valor
+        if actual < menor['POBLACION']:
+            menor = pais
+        if actual > mayor['POBLACION']:
+            mayor = pais
+
+    #Mostramos los resultados
+    print("\n--- País con mayor y menor población ---\n")
+    print(f"País con mayor población: {mayor['NOMBRE']} --> {mayor['POBLACION']} habitantes")
+    print(f"País con menor población: {menor['NOMBRE']} --> {menor['POBLACION']} habitantes")
+    input("\nPresione Enter para continuar. ")
+
+#Muestra el promedio de la poblacion en la lista
+def promedio_poblacion(lista_paises):
+    """
+    Calcula el promedio de población de todos los países de la lista.
+    Imprime el resultado directamente en la consola.
+
+    Args:
+        lista_paises (list): La lista de países.
+    """
+    #Usamos un acumulador para calcular el promedio
+    total = 0
+
+    #Recorremos la lista y sumamos la cantidad de poblacion al acumulador
+    for pais in lista_paises:
+        total += pais['POBLACION']
+    
+    #Calculamos el promedio
+    cantidad_paises = len(lista_paises)
+    promedio = total / cantidad_paises
+
+    #Mostramos el resultado en pantalla
+    print("\n--- Promedio de población ---\n")
+    print(f"El promedio es de: {int(promedio)} habitantes ")
+    input("\nPresione Enter para continuar. ")
+
+#Muestra el promedio de la superficie en la lista
+def promedio_superficie(lista_paises):
+    """
+    Calcula el promedio de superficie de todos los países de la lista.
+    Imprime el resultado directamente en la consola.
+
+    Args:
+        lista_paises (list): La lista de países.
+    """
+    #Usamos un acumulador para calcular el promedio
+    total = 0
+
+    #Recorremos la lista y sumamos la superficie al acumulador
+    for pais in lista_paises:
+        total += pais['SUPERFICIE']
+    
+    #Calculamos el promedio
+    cantidad_paises = len(lista_paises)
+    promedio = total / cantidad_paises
+
+    #Mostramos el resultado en pantalla
+    print("\n--- Promedio de superficie ---\n")
+    print(f"El promedio es de: {int(promedio)} km² ")
+    input("\nPresione Enter para continuar. ")
+
+#Muestra la cantidad de paises de cada continente
+def paises_por_continente(lista_paises):
+    """
+    Cuenta cuántos países pertenecen a cada continente.
+    Imprime el resultado.
+
+    Args:
+        lista_paises (list): La lista de países.
+    """
+    #Usamos un diccionario para contar
+    contador = {}
+
+    #Recorremos la lista
+    for pais in lista_paises:
+        continente = pais['CONTINENTE']
+        #Si es la primera vez que el programa ve este continente, se le da valor 1
+        #Caso contrario, se le suma 1
+        if continente not in contador:
+            contador[continente] = 1
+        else:
+            contador[continente] += 1
+    
+    #Mostramos los resultados
+    print("\n--- Cantidad de países por continente ---\n")
+    # .items() nos da la clave (continente) y el valor (cantidad)
+    for continente, cantidad in contador.items():
+        print(f"{continente}: {cantidad} país/es ")
+    input("\nPresione Enter para continuar. ")
+
+#Muestra estadisticas de poblacion,superficie y paises por continente
+def mostrar_estadisticas(lista_paises):
+    """
+    Muestra un sub-menú para mostras estadisticas 
+    Muestra el resultado obtenido
+
+    Args:
+        lista_paises (list): La lista de países.
+
+    Returns:
+        None: Gestiona el menú e imprime por pantalla la estadistica deseada
+    """
+    #Chequeamos que la lista no esté vacía 
+    if lista_vacia(lista_paises):
+        return
+    
+    #Sub-menu de opciones para ordenar
+    while True:
+        print("\n--- Mostrar estadísticas ---\n")
+        print("1. País con mayor y menor población ")
+        print("2. Promedio de población ")
+        print("3. Promedio de superficie ")
+        print("4. Cantidad de países por continente ")
+        print("5. Volver atrás ")
+        print("\n")
+
+        opcion = input("Ingrese una de las opciones --> ").strip()
+
+        match opcion:
+
+            case '1':
+                calcular_poblacion(lista_paises)
+
+            case '2':
+                promedio_poblacion(lista_paises)
+
+            case '3':
+                promedio_superficie(lista_paises)
+
+            case '4':
+                paises_por_continente(lista_paises)
+
+            case '5':
+                print("Volviendo al menú...")
+                break
+
+            case _: 
+                print("Opción inválida!")
+                input("\nPresione Enter para volver. ")
+
 # Función de menú
 def mostrar_menu():
     """
     Imprime el menú de opciones.
     """
     # Mensajes de opciones del menú
-    print("\n")
+    print("=" * 60)
     print("GESTION DE DATOS DE PAISES")
     print("=" * 60)
     print("1. Agregar un país")
-    print("2. Actualizar los datos de poblacion y superficie de un país")
+    print("2. Actualizar los datos de población y superficie de un país")
     print("3. Buscar un país por nombre (coincidencia parcial o exacta)")
-    print("4. Filtrar paises")
-    print("5. Ordenar paises")
-    print("6. Mostrar estadisticas")
+    print("4. Filtrar países")
+    print("5. Ordenar países")
+    print("6. Mostrar estadísticas")
     print("7. Salir")
     print("=" * 60)
 
@@ -647,7 +824,7 @@ def main():
             
             case '6':
                 # Llamado a función
-                pass
+                mostrar_estadisticas(lista_paises)
             
             case '7':
                 # Mensaje finalización del programa
