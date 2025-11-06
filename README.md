@@ -7,10 +7,12 @@ Es un **Trabajo Práctico de la asignatura Programación I**, cuyo objetivo es a
 
 El programa ofrece al usuario:
 
-- Búsqueda de países por nombre (coincidencia parcial o exacta).
-- Filtrado de países por continente, rango de población o rango de superficie.
-- Ordenamiento de países por nombre, población o superficie (ascendente o descendente).
-- Cálculo de estadísticas, país con mayor y menor población, promedio de población y superficie, cantidad de países por continente.
+- Agregar nuevos países con validación de datos.
+- Actualizar la población y superficie de países existentes.
+- Buscar países por nombre (coincidencia parcial o exacta).
+- Filtrar países por continente, rango de población o rango de superficie.
+- Ordenar la lista de países por nombre, población o superficie (ascendente o descendente).
+- Mostrar estadísticas clave (país con mayor/menor población, promedios, y conteo por continente).
 
 ## 🏫 Universidad
 - **UTN - Universidad Tecnológica Nacional**
@@ -23,72 +25,76 @@ El programa ofrece al usuario:
 3. Guardar el archivo `datos_paises.csv` en la misma carpeta donde se encuentra el programa principal (`main.py`).  
 4. Ejecutar el archivo principal desde la terminal o entorno de desarrollo
 
+**Importante:** El programa debe ejecutarse desde la misma ubicación donde está el archivo datos_paises.csv. Si se ejecuta desde otra carpeta, el script no podrá encontrar el archivo.
+
 ## 🧩 Ejemplo de Entradas y Salidas
 
-*Ejemplo 1: Buscar un país por nombre parcial*
+*Ejemplo 1: Buscar un país por nombre parcial (Opción 3)*
 ```bash
 #Entrada
-Ingrese nombre del país a buscar: ar
+Ingrese el nombre (o parte del nombre) del país a buscar: ar
 
 #Salida
- Resultados encontrados: 
-- Argentina (América del Sur) 
-- Arabia Saudita (Asia)
+NOMBRE               |    POBLACION | SUPERFICIE | CONTINENTE     
+======================================================================
+Argentina            |     45000000 |    2780400 | América        
+Arabia Saudita       |     35000000 |    2149690 | Asia           
+======================================================================
 ```
 
-*Ejemplo 2: Filtrar países por continente*
+*Ejemplo 2: Filtrar países por continente (Opción 4 -> 1)*
 ```bash
 #Entrada
-Opción seleccionada: Filtrar por continente
-Ingrese continente: América
+Ingrese el continente: America
 
 #Salida
-Resultados encontrados:
-- Argentina
-- Brasil
-- México
-- Canadá
-...
+NOMBRE               |    POBLACION | SUPERFICIE | CONTINENTE     
+======================================================================
+Argentina            |     45000000 |    2780400 | América        
+Brasil               |    214000000 |    8515767 | América        
+Canada               |     38000000 |    9984670 | América        
+======================================================================
 ```
 
-*Ejemplo 3: Filtrar países por rango de población*
+*Ejemplo 3: Filtrar países por rango de población (Opción 4 -> 2)*
 ```bash
 #Entrada
-Opción seleccionada: Filtrar por población
-Ingrese población mínima: 1000000
-Ingrese población máxima: 10000000
+Ingrese la población mínima: 1000000
+Ingrese la población máxima: 10000000
 
 #Salida
-Resultados encontrados:
-- Uruguay (3.500.000)
-- Paraguay (7.000.000)
-...
+NOMBRE               |    POBLACION | SUPERFICIE | CONTINENTE     
+======================================================================
+Uruguay              |      3500000 |     176215 | América        
+Paraguay             |      7000000 |     406752 | América        
+======================================================================
 ```
 
-*Ejemplo 4: Ordenar países por nombre*
+*Ejemplo 4: Ordenar países por superficie descendente (Opción 5 -> 4)*
 ```bash
 #Entrada
-Opción seleccionada: Ordenar por nombre
-Orden ascendente o descendente? ascendente
+Ingrese una de las opciones --> 4
 
 #Salida
-Listado de países ordenados:
-- Argentina
-- Brasil
-- Canadá
-- China
-...
+NOMBRE               |    POBLACION | SUPERFICIE | CONTINENTE     
+======================================================================
+Canada               |     38000000 |    9984670 | América        
+China                |   1412000000 |    9596961 | Asia           
+Brasil               |    214000000 |    8515767 | América        
+Argentina            |     45000000 |    2780400 | América        
+======================================================================
 ```
 
-*Ejemplo 5: Mostrar país con mayor y menor población*
+*Ejemplo 5: Mostrar país con mayor y menor población (Opción 6 -> 1)*
 ```bash
 #Entrada
-Opción seleccionada: Mostrar estadísticas
-País con menor y Mayor población 
+Ingrese una de las opciones --> 1
 
 #Salida
-País con mayor población: China (1.412.000.000)
-País con menor población: Nauru (12.000)
+--- País con mayor y menor población ---
+
+País con mayor población: China --> 1412000000 habitantes
+País con menor población: Nauru --> 12000 habitantes
 ```
 
 ## 👥 Autores

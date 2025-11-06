@@ -63,7 +63,6 @@ def guardar_datos_csv(lista_paises, nombre_archivo):
     # Mensaje final
     print("========================================")
     print(f"Datos actualizados en {nombre_archivo}.")
-    print("========================================")
 
 # Función de validación
 def lista_vacia(lista_paises):
@@ -313,7 +312,7 @@ def agregar_pais(lista_paises, nombre_archivo):
     guardar_datos_csv(lista_paises, nombre_archivo)
     
     # Mensaje final
-    print(f"\n¡El país '{nombre_pais}' ha sido agregado exitosamente!")
+    print(f"¡El país '{nombre_pais}' ha sido agregado exitosamente!")
 
 # Función de menú
 def actualizar_datos_pais(lista_paises, nombre_archivo):
@@ -342,7 +341,8 @@ def actualizar_datos_pais(lista_paises, nombre_archivo):
     # Inicio condicional
     if pais_encontrado:
         # Datos actuales del país encontrado
-        print(f"\nDatos actuales de '{pais_encontrado['NOMBRE']}':")
+        print("========================================")
+        print(f"Datos actuales de '{pais_encontrado['NOMBRE']}':")
         print(f"  - Población: {pais_encontrado['POBLACION']}")
         print(f"  - Superficie: {pais_encontrado['SUPERFICIE']}")
         print("========================================")
@@ -362,7 +362,6 @@ def actualizar_datos_pais(lista_paises, nombre_archivo):
     else:
         # Mensaje de error
         print(f"Error: El país '{nombre_pais_buscado}' no se encontró en la lista.")
-        print("========================================================")
 
 # Función de menú
 def buscar_pais(lista_paises):
@@ -608,7 +607,7 @@ def ordenar_paises(lista_paises):
                 input("\nPresione Enter para volver. ")
 
 #Calcula el pais con mayor y menor poblacion
-def calcular_minymax_poblacion(lista_paises):
+def calcular_poblacion(lista_paises):
     """
     Encuentra el país con la mayor y la menor población de la lista.
     Imprime los resultados directamente en la consola.
@@ -686,7 +685,7 @@ def promedio_superficie(lista_paises):
     input("\nPresione Enter para continuar. ")
 
 #Muestra la cantidad de paises de cada continente
-def cantidad_paisesxcontinente(lista_paises):
+def paises_por_continente(lista_paises):
     """
     Cuenta cuántos países pertenecen a cada continente.
     Imprime el resultado.
@@ -713,8 +712,6 @@ def cantidad_paisesxcontinente(lista_paises):
     for continente, cantidad in contador.items():
         print(f"{continente}: {cantidad} país/es ")
     input("\nPresione Enter para continuar. ")
-
-
 
 #Muestra estadisticas de poblacion,superficie y paises por continente
 def mostrar_estadisticas(lista_paises):
@@ -747,7 +744,7 @@ def mostrar_estadisticas(lista_paises):
         match opcion:
 
             case '1':
-                calcular_minymax_poblacion(lista_paises)
+                calcular_poblacion(lista_paises)
 
             case '2':
                 promedio_poblacion(lista_paises)
@@ -756,7 +753,7 @@ def mostrar_estadisticas(lista_paises):
                 promedio_superficie(lista_paises)
 
             case '4':
-                cantidad_paisesxcontinente(lista_paises)
+                paises_por_continente(lista_paises)
 
             case '5':
                 print("Volviendo al menú...")
@@ -766,14 +763,13 @@ def mostrar_estadisticas(lista_paises):
                 print("Opción inválida!")
                 input("\nPresione Enter para volver. ")
 
-
 # Función de menú
 def mostrar_menu():
     """
     Imprime el menú de opciones.
     """
     # Mensajes de opciones del menú
-    print("\n")
+    print("=" * 60)
     print("GESTION DE DATOS DE PAISES")
     print("=" * 60)
     print("1. Agregar un país")
