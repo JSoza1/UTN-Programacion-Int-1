@@ -558,10 +558,10 @@ def ordenar_lista(lista_paises,clave,reversa=False):
     
     #Hacemos una copia de la lista de paises
     lista_copia = lista_paises.copy()
-    n = len(lista_copia) 
+    longitud_lista = len(lista_copia) 
 
     #Bucle exterior: recorre la lista de 0 hasta el final
-    for i in range(n):
+    for i in range(longitud_lista):
         
         #Asumimos que el elemento en i es el extremo (mínimo o máximo)
         #Guardamos su posicion
@@ -569,7 +569,7 @@ def ordenar_lista(lista_paises,clave,reversa=False):
         
         #Bucle interior: busca en el "resto" de la lista 
         #para ver si encontramos un elemento "mejor"
-        for j in range(i + 1, n):
+        for j in range(i + 1, longitud_lista):
             
             #Logica de comparacion
             valor_actual = lista_copia[j][clave]
